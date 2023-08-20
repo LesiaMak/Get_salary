@@ -120,36 +120,36 @@ def get_sj_statistics(lang, api_id):
                 }}
     return statistics
 
-def print_table_sj(vacancies, api_id):
+def print_table_sj(languages, api_id):
     title_sj = 'SuperJob Moscow'
-    table_data_sj = [
+    table_sj = [
         ['Язык программирования ', 'Вакансий найдено ', 'Вакансий обработано', 'Cредняя зарплата'],
     ]
-    for vac in vacancies:
-        stat_sj = get_sj_statistics(vac, api_id)[vac]
-        table_data_sj.append([vac, stat_sj['vacancies_found'], stat_sj['vacancies_processed'], stat_sj['average_salary']])
-    table_sj = AsciiTable(table_data_sj, title_sj)
+    for lang in languages:
+        stat_sj = get_sj_statistics(lang, api_id)[lang]
+        table_sj.append([lang, stat_sj['vacancies_found'], stat_sj['vacancies_processed'], stat_sj['average_salary']])
+    table_sj = AsciiTable(table_sj, title_sj)
     return print(table_sj.table)
 
-def print_table_hh(vacancies):    
+def print_table_hh(languages):    
     title_hh = 'HeadHunter Moscow'
-    table_data_hh = [
+    table_hh = [
         ['Язык программирования ', 'Вакансий найдено ', 'Вакансий обработано', 'Cредняя зарплата'],
     ]
-    for vac in vacancies:
-        stat_hh = get_hh_statistics(vac)[vac]
-        table_data_hh.append([vac, stat_hh['vacancies_found'], stat_hh['vacancies_processed'], stat_hh['average_salary']])
-    table_hh = AsciiTable(table_data_hh, title_hh)
+    for lang in languages:
+        stat_hh = get_hh_statistics(lang)[lang]
+        table_hh.append([lang, stat_hh['vacancies_found'], stat_hh['vacancies_processed'], stat_hh['average_salary']])
+    table_hh = AsciiTable(table_hh, title_hh)
     return print(table_hh.table)
 
 
 def main():
     load_dotenv()
     api_id = os.environ['SUPERJOB_SECRET_KEY']
-    vacancies = ['Python', 'Java', 'C#', 'C++']
+    languages = ['Python', 'Java', 'C#', 'C++']
     try:
-        print_table_sj(vacancies, api_id)
-        print_table_hh(vacancies)
+        print_table_sj(languages, api_id)
+        print_table_hh(languages)
     except requests.HTTPError:
         print('Не возможно найти страницу', file=sys.stderr)
     except requests.exceptions.ConnectionError:
