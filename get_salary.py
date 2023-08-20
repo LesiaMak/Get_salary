@@ -37,7 +37,7 @@ def predict_rub_salary_hh(lang):
     salary_items = get_hh_salary(lang)
     avg_salary = []
     for item in salary_items:
-        if item is not None:      
+        if item:      
             if item['from'] is None and item['currency'] == 'RUR':
                 avg_salary.append(item['to'] * 0.8)
             elif item['to'] is None and item['currency'] == 'RUR':
