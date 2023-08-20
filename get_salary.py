@@ -52,17 +52,17 @@ def predict_rub_salary_hh(lang):
 
 def get_hh_statistics(lang):
     wages = predict_rub_salary_hh(lang)
-    vac_pros = 0
+    jobs_counted = 0
     summ = 0
     for wage in wages:
         if wage is not None:
-            vac_pros = vac_pros + 1
+            jobs_counted = jobs_counted + 1
             summ = summ + wage       
 
     statistics = {lang:{
                     "vacancies_found": get_vac_hh(lang)[0]['found'],
-                    "vacancies_processed": vac_pros,
-                    "average_salary": int(summ/vac_pros),
+                    "vacancies_processed": jobs_counted,
+                    "average_salary": int(summ/jobs_counted),
                 }}
     return statistics
 
@@ -106,17 +106,17 @@ def predict_rub_salary_for_superJob(lang, api_id):
 
 def get_sj_statistics(lang, api_id):
     wages = predict_rub_salary_for_superJob(lang, api_id)
-    vac_pros = 0
+    jobs_counted = 0
     summ = 0
     for wage in wages:
         if wage is not None:
-            vac_pros = vac_pros + 1
+            jobs_counted = jobs_counted + 1
             summ = summ + wage       
 
     statistics = {lang:{
                     "vacancies_found": len(wages),
-                    "vacancies_processed": vac_pros,
-                    "average_salary": int(summ/vac_pros),
+                    "vacancies_processed": jobs_counted,
+                    "average_salary": int(summ/jobs_counted),
                 }}
     return statistics
 
