@@ -32,20 +32,30 @@ def get_hh_salary(lang):
             salary.append(item['salary'])
     return salary
 
+def count_avg_salary(wage_from, wage_to, currency):
+    if wage_from is None and wage_to is None:
+        avg_salary = None
+    elif not wage_from and not wage_to:
+        avg_salary = None
+    elif wage_from is None or not wage_from and currency == 'RUR' or currency == 'rub':
+        avg_salary = wage_to * 0.8
+    elif wage_to is None or not wage_to and currency == 'RUR' or currency == 'rub':
+        avg_salary = wage_from * 1.2
+    elif wage_from and wage_to and currency == 'rub' or currency == 'RUR':
+        avg_salary = (wage_from + wage_to)/ 2
+    elif currency != 'RUR' or currency != 'rub':
+        avg_salary = None
+
+    
+    return avg_salary
+    
 
 def predict_rub_salary_hh(lang):
     salary_items = get_hh_salary(lang)
     avg_salary = []
     for item in salary_items:
-        if item:      
-            if item['from'] is None and item['currency'] == 'RUR':
-                avg_salary.append(item['to'] * 0.8)
-            elif item['to'] is None and item['currency'] == 'RUR':
-                avg_salary.append(item['from'] * 1.2)
-            elif item['currency'] == 'RUR':
-                avg_salary.append((item['from'] + item['to'])/ 2)
-            elif item['currency'] != 'RUR':
-                avg_salary.append(None)
+        if item:
+           avg_salary.append(count_avg_salary(item['from'], item['to'], item['currency']))
         else:
             avg_salary.append(None)
     return avg_salary
@@ -96,16 +106,13 @@ def predict_rub_salary_for_superJob(lang, api_id):
     salaries = []
     for page in get_superjob_vac(lang, api_id):
         for item in page['objects']:
-            if item['payment_from'] != 0 and item['payment_to'] != 0 and item['currency'] == 'rub':
-                salaries.append((item['payment_from'] + item['payment_to'])/ 2)
-            elif item['payment_from'] == 0 and item['payment_to'] == 0:
-                salaries.append(None)
-            elif item['payment_from'] == 0 and item['currency'] == 'rub':
-                salaries.append(item['payment_to'] * 0.8)
-            elif item['payment_to'] == 0 and item['currency'] == 'rub':
-                salaries.append(item['payment_from'] * 1.2)           
-            elif item['currency'] != 'rub':
-                salaries.append(None)
+            salaries.append(count_avg_salary(
+                item['payment_from'], 
+                item['payment_to'], 
+                item['currency']
+                )
+                )
+
     return(salaries)
 
 def get_sj_statistics(lang, api_id):
