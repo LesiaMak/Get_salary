@@ -120,7 +120,7 @@ def get_SJ_statistics(lang, api_id):
                 }}
     return statistics
 
-def print_table(vacancies, api_id):
+def print_table_sj(vacancies, api_id):
     title_SJ = 'SuperJob Moscow'
     table_data_sj = [
         ['Язык программирования ', 'Вакансий найдено ', 'Вакансий обработано', 'Cредняя зарплата'],
@@ -129,9 +129,9 @@ def print_table(vacancies, api_id):
         stat_sj = get_SJ_statistics(vac, api_id)[vac]
         table_data_sj.append([vac, stat_sj['vacancies_found'], stat_sj['vacancies_processed'], stat_sj['average_salary']])
     table_sj = AsciiTable(table_data_sj, title_SJ)
-    print(table_sj.table)
+    return print(table_sj.table)
 
-    
+def print_table_hh(vacancies):    
     title_HH = 'HeadHunter Moscow'
     table_data_hh = [
         ['Язык программирования ', 'Вакансий найдено ', 'Вакансий обработано', 'Cредняя зарплата'],
@@ -140,7 +140,7 @@ def print_table(vacancies, api_id):
         stat_hh = get_HH_statistics(vac)[vac]
         table_data_hh.append([vac, stat_hh['vacancies_found'], stat_hh['vacancies_processed'], stat_hh['average_salary']])
     table_hh = AsciiTable(table_data_hh, title_HH)
-    print(table_hh.table)
+    return print(table_hh.table)
 
 
 def main():
@@ -148,7 +148,8 @@ def main():
     api_id = os.environ['SUPERJOB_SECRET_KEY']
     vacancies = ['Python', 'Java', 'C#', 'C++']
     try:
-        print_table(vacancies, api_id)
+        print_table_sj(vacancies, api_id)
+        print_table_hh(vacancies)
     except requests.HTTPError:
         print('Не возможно найти страницу', file=sys.stderr)
     except requests.exceptions.ConnectionError:
