@@ -153,7 +153,7 @@ def main():
         print('Не возможно найти страницу', file=sys.stderr)
     except requests.exceptions.ConnectionError:
         print('Нет связи с сервером', file=sys.stderr)
-        time.sleep(5)
+        
         
 
 if __name__ == '__main__':
