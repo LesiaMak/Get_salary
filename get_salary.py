@@ -50,7 +50,7 @@ def predict_rub_salary_hh(lang):
             avg_salary.append(None)
     return avg_salary
 
-def get_HH_statistics(lang):
+def get_hh_statistics(lang):
     wages = predict_rub_salary_hh(lang)
     vac_pros = 0
     summ = 0
@@ -104,7 +104,7 @@ def predict_rub_salary_for_superJob(lang, api_id):
                 salaries.append(None)
     return(salaries)
 
-def get_SJ_statistics(lang, api_id):
+def get_sj_statistics(lang, api_id):
     wages = predict_rub_salary_for_superJob(lang, api_id)
     vac_pros = 0
     summ = 0
@@ -121,25 +121,25 @@ def get_SJ_statistics(lang, api_id):
     return statistics
 
 def print_table_sj(vacancies, api_id):
-    title_SJ = 'SuperJob Moscow'
+    title_sj = 'SuperJob Moscow'
     table_data_sj = [
         ['Язык программирования ', 'Вакансий найдено ', 'Вакансий обработано', 'Cредняя зарплата'],
     ]
     for vac in vacancies:
-        stat_sj = get_SJ_statistics(vac, api_id)[vac]
+        stat_sj = get_sj_statistics(vac, api_id)[vac]
         table_data_sj.append([vac, stat_sj['vacancies_found'], stat_sj['vacancies_processed'], stat_sj['average_salary']])
-    table_sj = AsciiTable(table_data_sj, title_SJ)
+    table_sj = AsciiTable(table_data_sj, title_sj)
     return print(table_sj.table)
 
 def print_table_hh(vacancies):    
-    title_HH = 'HeadHunter Moscow'
+    title_hh = 'HeadHunter Moscow'
     table_data_hh = [
         ['Язык программирования ', 'Вакансий найдено ', 'Вакансий обработано', 'Cредняя зарплата'],
     ]
     for vac in vacancies:
-        stat_hh = get_HH_statistics(vac)[vac]
+        stat_hh = get_hh_statistics(vac)[vac]
         table_data_hh.append([vac, stat_hh['vacancies_found'], stat_hh['vacancies_processed'], stat_hh['average_salary']])
-    table_hh = AsciiTable(table_data_hh, title_HH)
+    table_hh = AsciiTable(table_data_hh, title_hh)
     return print(table_hh.table)
 
 
