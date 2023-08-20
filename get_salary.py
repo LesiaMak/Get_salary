@@ -7,13 +7,14 @@ from dotenv import load_dotenv
 
 
 def get_vac_hh(lang):
+    Moscow_area_number = 1
     page = 0
     pages_number = 1
     pages = []
     while page < pages_number:
         payloads = {
             'text': f'программист {lang}',
-            'area': 1,
+            'area': Moscow_area_number,
             'page': page
         }
         response = requests.get('https://api.hh.ru/vacancies', params=payloads)
@@ -26,11 +27,10 @@ def get_vac_hh(lang):
 
 
 def get_hh_salary(lang):
-    salary = []
     for page in get_vac_hh(lang):
-        for item in page['items']:
-            salary.append(item['salary'])
+        salary = [item['salary'] for item in page['items']]
     return salary
+
 
 def count_avg_salary(wage_from, wage_to, currency):
     if wage_from is None and wage_to is None:
@@ -82,6 +82,7 @@ def get_hh_statistics(lang):
 
 
 def get_superjob_vac(lang, api_id):
+    Moscow_area_number = 4
     page = 0
     pages_number = 1
     pages = []
@@ -92,12 +93,12 @@ def get_superjob_vac(lang, api_id):
             }
         payloads = {
             'keyword':f'программист {lang}',
-            'town': '4',
+            'town': f'{Moscow_area_number}',
             }
         response = requests.get('https://api.superjob.ru/2.0/vacancies', headers=headers, params=payloads)
         response.raise_for_status()
         page_payload = response.json()
-        pages_number = 10
+        pages_number = 500
         pages.append(page_payload)
         page += 1   
     return pages
@@ -113,7 +114,7 @@ def predict_rub_salary_for_superJob(lang, api_id):
                 )
                 )
 
-    return(salaries)
+    return salaries
 
 def get_sj_statistics(lang, api_id):
     wages = predict_rub_salary_for_superJob(lang, api_id)
