@@ -58,11 +58,15 @@ def get_hh_statistics(lang):
         if wage is not None:
             jobs_counted = jobs_counted + 1
             summ = summ + wage       
-
+    if jobs_counted == 0:
+        avg_salary = 0
+    else:
+        avg_salary = summ/jobs_counted
+    
     statistics = {lang:{
                     "vacancies_found": get_vac_hh(lang)[0]['found'],
                     "vacancies_processed": jobs_counted,
-                    "average_salary": int(summ/jobs_counted),
+                    "average_salary": int(avg_salary),
                 }}
     return statistics
 
@@ -109,14 +113,17 @@ def get_sj_statistics(lang, api_id):
     jobs_counted = 0
     summ = 0
     for wage in wages:
-        if wage is not None:
+        if wage:
             jobs_counted = jobs_counted + 1
             summ = summ + wage       
-
+    if jobs_counted == 0:
+        avg_salary = 0
+    else:
+        avg_salary = summ/jobs_counted
     statistics = {lang:{
                     "vacancies_found": len(wages),
                     "vacancies_processed": jobs_counted,
-                    "average_salary": int(summ/jobs_counted),
+                    "average_salary": int(avg_salary),
                 }}
     return statistics
 
@@ -146,7 +153,7 @@ def print_table_hh(languages):
 def main():
     load_dotenv()
     api_id = os.environ['SUPERJOB_SECRET_KEY']
-    languages = ['Python', 'Java', 'C#', 'C++']
+    languages = ['Python', 'Java', 'C#', 'C++', 'Ruby']
     try:
         print_table_sj(languages, api_id)
         print_table_hh(languages)
