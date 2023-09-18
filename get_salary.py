@@ -167,10 +167,8 @@ def main():
     api_id = os.environ['SUPERJOB_SECRET_KEY']
     languages = ['Python', 'Java', 'C#', 'C++', 'Ruby']
     try:
-        #print(predict_rub_salary_hh('Python'))
-        print(predict_rub_salary_hh('Python'))
-        #print_table_sj(languages, api_id)
-        #print_table_hh(languages)
+        print_table_sj(languages, api_id)
+        print_table_hh(languages)
     except requests.HTTPError:
         print('Не возможно найти страницу', file=sys.stderr)
     except requests.exceptions.ConnectionError:
