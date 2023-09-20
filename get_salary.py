@@ -96,18 +96,21 @@ def get_superjob_vacancies(lang, api_id):
     return pages
 
 
-def get_avg_salaries(salaries, vacancies_on_page):
+def get_avg_salaries(vacancies_on_page):
+    salaries=[]
     for vacancy in vacancies_on_page:
         avg_salary = count_avg_salary(vacancy['payment_from'], vacancy['payment_to'], vacancy['currency'])
         if avg_salary:
             salaries.append(avg_salary)
+    return salaries
     
 
 def predict_rub_salary_for_superJob(vacancies):
-    salaries = []
+    salaries=[]
     for page in vacancies:
-        get_avg_salaries(salaries, page['objects'])
+        salaries.extend(get_avg_salaries(page['objects']))
     return salaries
+
 
 
 def calculate_statistics(wages):
