@@ -49,8 +49,7 @@ def predict_rub_salary_hh(lang):
     return avg_salary
 
 
-def calculate_jobs_and_avg_salary(lang):
-    wages = predict_rub_salary_hh(lang)
+def calculate_jobs_and_avg_salary(wages):
     jobs_counted = len(wages)
     summ = 0
     for wage in wages:
@@ -63,12 +62,11 @@ def calculate_jobs_and_avg_salary(lang):
     return [jobs_counted, avg_salary]
 
 
-def get_hh_statistics(lang):  
-    statistics = {lang:{
-                    "vacancies_found": get_vacancies_hh(lang)[0]['found'],
-                    "vacancies_processed": calculate_jobs_and_avg_salary(lang)[0],
-                    "average_salary": int(calculate_jobs_and_avg_salary(lang)[1]),
-                }}
+def get_hh_statistics(lang, wages):  
+    statistics = [lang,
+                  get_vacancies_hh(lang)[0]['found'],
+                  calculate_jobs_and_avg_salary(wages)[0],
+                  int(calculate_jobs_and_avg_salary(wages)[1])]
     return statistics
 
 
@@ -95,6 +93,7 @@ def get_superjob_vacancies(lang, api_id):
         page += 1   
     return pages
 
+
 def fetch_numbers(salaries, vacancies):
     for vacancy in vacancies:
         avg_salary = count_avg_salary(vacancy['payment_from'], vacancy['payment_to'], vacancy['currency'])
@@ -109,8 +108,7 @@ def predict_rub_salary_for_superJob(lang, api_id):
     return salaries
 
 
-def calculate_statistics(lang, api_id):
-    wages = predict_rub_salary_for_superJob(lang, api_id)
+def calculate_statistics(wages):
     jobs_counted = len(wages)
     summ = 0
     for wage in wages:
@@ -123,12 +121,11 @@ def calculate_statistics(lang, api_id):
     return [jobs_counted, avg_salary]
 
 
-def get_sj_statistics(lang, api_id):
-    statistics = {lang:{
-                    "vacancies_found": get_superjob_vacancies(lang, api_id)[0]['total'],
-                    "vacancies_processed": calculate_statistics(lang, api_id)[0],
-                    "average_salary": int(calculate_statistics(lang, api_id)[1]),
-                }}
+def get_sj_statistics(lang, api_id, wages):
+    statistics = [lang,
+                  get_superjob_vacancies(lang, api_id)[0]['total'],
+                  calculate_statistics(wages)[0],
+                  int(calculate_statistics(wages)[1])]
     return statistics
 
 
@@ -139,10 +136,7 @@ def print_table_sj(languages, api_id):
         ['Язык программирования ', 'Вакансий найдено ', 'Вакансий обработано', 'Cредняя зарплата'],
     ]
     for lang in languages:
-        table_sj.append([lang, 
-                         get_superjob_vacancies(lang, api_id)[0]['total'], 
-                         calculate_statistics(lang, api_id)[0], 
-                         int(calculate_statistics(lang, api_id)[1])])
+        table_sj.append(get_sj_statistics(lang, api_id, predict_rub_salary_for_superJob(lang, api_id)))
     table_sj = AsciiTable(table_sj, title_sj)
     return print(table_sj.table)
 
@@ -154,10 +148,7 @@ def print_table_hh(languages):
         ['Язык программирования ', 'Вакансий найдено ', 'Вакансий обработано', 'Cредняя зарплата'],
     ]
     for lang in languages:
-        table_hh.append([lang, 
-                         get_vacancies_hh(lang)[0]['found'], 
-                         calculate_jobs_and_avg_salary(lang)[0], 
-                         int(calculate_jobs_and_avg_salary(lang)[1])])
+        table_hh.append(get_hh_statistics(lang, predict_rub_salary_hh(lang)))
     table_hh = AsciiTable(table_hh, title_hh)
     return print(table_hh.table)
 
