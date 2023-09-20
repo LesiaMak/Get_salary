@@ -74,12 +74,13 @@ def get_superjob_vacancies(lang, api_id):
     moscow_area_number = 4
     page = 0
     pages_number = 1
+    vacancies_per_page = 5
     pages = []
     while page < pages_number:
         headers = {
             'X-Api-App-Id': api_id,
             'page': f'{page}',
-            'count': '5'
+            'count': f'{vacancies_per_page}'
             }
         payloads = {
             'keyword':f'программист {lang}',
@@ -88,7 +89,7 @@ def get_superjob_vacancies(lang, api_id):
         response = requests.get('https://api.superjob.ru/2.0/vacancies', headers=headers, params=payloads)
         response.raise_for_status()
         page_payload = response.json()
-        pages_number = page_payload['total']/5
+        pages_number = page_payload['total']/vacancies_per_page
         pages.append(page_payload)
         page += 1   
     return pages
