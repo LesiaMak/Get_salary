@@ -96,8 +96,8 @@ def get_superjob_vacancies(lang, api_id):
     return pages
 
 
-def fetch_numbers(salaries, vacancies):
-    for vacancy in vacancies:
+def get_avg_salaries(salaries, vacancies_on_page):
+    for vacancy in vacancies_on_page:
         avg_salary = count_avg_salary(vacancy['payment_from'], vacancy['payment_to'], vacancy['currency'])
         if avg_salary:
             salaries.append(avg_salary)
@@ -106,7 +106,7 @@ def fetch_numbers(salaries, vacancies):
 def predict_rub_salary_for_superJob(vacancies):
     salaries = []
     for page in vacancies:
-        fetch_numbers(salaries, page['objects'])
+        get_avg_salaries(salaries, page['objects'])
     return salaries
 
 
