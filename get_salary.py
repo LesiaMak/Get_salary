@@ -63,11 +63,12 @@ def calculate_jobs_and_avg_salary(wages):
     return [jobs_counted, avg_salary]
 
 
-def get_hh_statistics(lang, wages, vacancies):  
+def get_hh_statistics(lang, wages, vacancies):
+    jobs_and_salary = calculate_jobs_and_avg_salary(wages)
     statistics = [lang,
                   vacancies[0]['found'],
-                  calculate_jobs_and_avg_salary(wages)[0],
-                  int(calculate_jobs_and_avg_salary(wages)[1])]
+                  jobs_and_salary[0],
+                  jobs_and_salary[1]]
     return statistics
 
 
@@ -127,10 +128,11 @@ def calculate_statistics(wages):
 
 
 def get_sj_statistics(lang, wages, vacancies):
+    jobs_and_salary = calculate_statistics(wages)
     statistics = [lang,
                   vacancies[0]['total'],
-                  calculate_statistics(wages)[0],
-                  int(calculate_statistics(wages)[1])]
+                  jobs_and_salary[0],
+                  jobs_and_salary[1]]
     return statistics
 
 
