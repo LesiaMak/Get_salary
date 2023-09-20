@@ -43,9 +43,9 @@ def count_avg_salary(wage_from, wage_to, currency):
 def predict_rub_salary_hh(vacancies):
     avg_salary = []
     for page in vacancies:
-        for item in page['items']:
-            if item['salary']:
-                avg_salary.append(count_avg_salary(item['salary']['from'], item['salary']['to'], item['salary']['currency']))
+        for job_adv in page['items']:
+            if job_adv['salary']:
+                avg_salary.append(count_avg_salary(job_adv['salary']['from'], job_adv['salary']['to'], job_adv['salary']['currency']))
     return avg_salary
 
 
