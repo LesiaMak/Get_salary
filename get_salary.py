@@ -28,7 +28,7 @@ def get_vacancies_hh(lang):
 
 def count_avg_salary(wage_from, wage_to, currency):
     if not wage_from and not wage_to:
-        avg_salary = None
+        avg_salary = 0
     elif not wage_from or not wage_from and currency == 'RUR' or currency == 'rub':
         avg_salary = wage_to * 0.8
     elif not wage_to or not wage_to and currency == 'RUR' or currency == 'rub':
@@ -36,7 +36,7 @@ def count_avg_salary(wage_from, wage_to, currency):
     elif wage_from and wage_to and currency == 'rub' or currency == 'RUR':
         avg_salary = (wage_from + wage_to)/ 2
     elif currency != 'RUR' or currency != 'rub':
-        avg_salary = None    
+        avg_salary = 0    
     return avg_salary
     
 
@@ -51,10 +51,8 @@ def predict_rub_salary_hh(vacancies):
 
 def get_hh_statistics(lang, wages, vacancies):
     jobs_counted = len(wages)
-    summ = 0
-    for wage in wages:
-        if wage:
-            summ = summ + wage       
+    if wages:
+        summ = sum(wages)       
     if not jobs_counted:
         avg_salary = 0
     else:
@@ -103,9 +101,8 @@ def predict_rub_salary_for_superJob(vacancies):
 
 def get_sj_statistics(lang, wages, vacancies):
     jobs_counted = len(wages)
-    summ = 0
-    for wage in wages:
-        summ = summ + int(wage)       
+    if wages:
+        summ = sum(wages)       
     if not jobs_counted:
         avg_salary = 0
     else:
@@ -153,7 +150,6 @@ def main():
     load_dotenv()
     api_id = os.environ['SUPERJOB_SECRET_KEY']
     languages = ['Python', 'Java', 'C#', 'C++', 'Ruby']
-    #languages = ['Python']
     try:
         print_table_sj(languages, api_id)
         print_table_hh(languages)
