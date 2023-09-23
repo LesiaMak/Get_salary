@@ -49,7 +49,7 @@ def predict_rub_salary_hh(vacancies):
     return avg_salary
 
 
-def calculate_jobs_and_avg_salary(wages):
+def get_hh_statistics(lang, wages, vacancies):
     jobs_counted = len(wages)
     summ = 0
     for wage in wages:
@@ -59,16 +59,10 @@ def calculate_jobs_and_avg_salary(wages):
         avg_salary = 0
     else:
         avg_salary = summ/jobs_counted
-
-    return [jobs_counted, avg_salary]
-
-
-def get_hh_statistics(lang, wages, vacancies):
-    jobs_and_salary = calculate_jobs_and_avg_salary(wages)
     statistics = [lang,
                   vacancies[0]['found'],
-                  jobs_and_salary[0],
-                  jobs_and_salary[1]]
+                  jobs_counted,
+                  avg_salary]
     return statistics
 
 
@@ -95,26 +89,19 @@ def get_superjob_vacancies(lang, api_id):
         pages.append(page_payload)
         page += 1   
     return pages
-
-
-def get_avg_salaries(vacancies_on_page):
-    salaries=[]
-    for vacancy in vacancies_on_page:
-        avg_salary = count_avg_salary(vacancy['payment_from'], vacancy['payment_to'], vacancy['currency'])
-        if avg_salary:
-            salaries.append(avg_salary)
-    return salaries
     
 
 def predict_rub_salary_for_superJob(vacancies):
     salaries=[]
     for page in vacancies:
-        salaries.extend(get_avg_salaries(page['objects']))
+        for vacancy in page['objects']:
+            avg_salary = count_avg_salary(vacancy['payment_from'], vacancy['payment_to'], vacancy['currency'])
+            if avg_salary:
+                salaries.append(avg_salary)
     return salaries
 
 
-
-def calculate_statistics(wages):
+def get_sj_statistics(lang, wages, vacancies):
     jobs_counted = len(wages)
     summ = 0
     for wage in wages:
@@ -123,16 +110,10 @@ def calculate_statistics(wages):
         avg_salary = 0
     else:
         avg_salary = summ/jobs_counted
-
-    return [jobs_counted, avg_salary]
-
-
-def get_sj_statistics(lang, wages, vacancies):
-    jobs_and_salary = calculate_statistics(wages)
     statistics = [lang,
                   vacancies[0]['total'],
-                  jobs_and_salary[0],
-                  jobs_and_salary[1]]
+                  jobs_counted,
+                  avg_salary]
     return statistics
 
 
@@ -172,6 +153,7 @@ def main():
     load_dotenv()
     api_id = os.environ['SUPERJOB_SECRET_KEY']
     languages = ['Python', 'Java', 'C#', 'C++', 'Ruby']
+    #languages = ['Python']
     try:
         print_table_sj(languages, api_id)
         print_table_hh(languages)
