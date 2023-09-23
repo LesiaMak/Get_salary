@@ -136,29 +136,35 @@ def get_sj_statistics(lang, wages, vacancies):
     return statistics
 
 
-
-def print_table_sj(languages, api_id):
-    title_sj = 'SuperJob Moscow'
+def get_table_sj(languages, api_id):
     table_sj = [
         ['Язык программирования ', 'Вакансий найдено ', 'Вакансий обработано', 'Cредняя зарплата'],
     ]
     for lang in languages:
         vacancies = get_superjob_vacancies(lang, api_id)
         table_sj.append(get_sj_statistics(lang, predict_rub_salary_for_superJob(vacancies), vacancies))
-    table_sj = AsciiTable(table_sj, title_sj)
+    return table_sj
+
+
+def print_table_sj(languages, api_id):
+    title_sj = 'SuperJob Moscow'
+    table_sj = AsciiTable(get_table_sj(languages, api_id), title_sj)
     return print(table_sj.table)
 
 
-
-def print_table_hh(languages):    
-    title_hh = 'HeadHunter Moscow'
+def get_table_hh(languages):
     table_hh = [
         ['Язык программирования ', 'Вакансий найдено ', 'Вакансий обработано', 'Cредняя зарплата'],
     ]
     for lang in languages:
         vacancies = get_vacancies_hh(lang)
         table_hh.append(get_hh_statistics(lang, predict_rub_salary_hh(vacancies), vacancies))
-    table_hh = AsciiTable(table_hh, title_hh)
+    return table_hh
+
+
+def print_table_hh(languages):    
+    title_hh = 'HeadHunter Moscow'
+    table_hh = AsciiTable(get_table_hh(languages), title_hh)
     return print(table_hh.table)
 
 
