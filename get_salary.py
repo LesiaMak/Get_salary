@@ -27,16 +27,18 @@ def get_vacancies_hh(lang):
 
 
 def count_avg_salary(wage_from, wage_to, currency):
-    if not wage_from and not wage_to:
+    if currency == 'RUR' or currency == 'rub':
+        if not wage_from and not wage_to:
+            avg_salary = 0
+        elif not wage_from:
+            avg_salary = wage_to * 0.8
+        elif not wage_to:
+            avg_salary = wage_from * 1.2
+        elif wage_from and wage_to:
+            avg_salary = (wage_from + wage_to)/ 2
+    else:
         avg_salary = 0
-    elif not wage_from or not wage_from and currency == 'RUR' or currency == 'rub':
-        avg_salary = wage_to * 0.8
-    elif not wage_to or not wage_to and currency == 'RUR' or currency == 'rub':
-        avg_salary = wage_from * 1.2
-    elif wage_from and wage_to and currency == 'rub' or currency == 'RUR':
-        avg_salary = (wage_from + wage_to)/ 2
-    elif currency != 'RUR' or currency != 'rub':
-        avg_salary = 0    
+    
     return avg_salary
     
 
@@ -123,7 +125,8 @@ def get_table(statistics):
 def main():
     load_dotenv()
     api_id = os.environ['SUPERJOB_SECRET_KEY']
-    languages = ['Python', 'Java', 'C#', 'C++', 'Ruby']
+    #languages = ['Python', 'Java', 'C#', 'C++', 'Ruby']
+    languages = ['Python']
     title_sj = 'SuperJob Moscow'
     title_hh = 'HeadHunter Moscow'
     table_sj = [
@@ -132,20 +135,21 @@ def main():
     table_hh = [
         ['Язык программирования ', 'Вакансий найдено ', 'Вакансий обработано', 'Cредняя зарплата'],
     ]
-    for lang in languages:
-        try:
-            vacancies_sj = get_superjob_vacancies(lang, api_id)
-            statistics_sj = get_sj_statistics(lang, predict_rub_salary_for_superJob(vacancies_sj), vacancies_sj)
-            vacancies_hh = get_vacancies_hh(lang)
-            statistics_hh = get_hh_statistics(lang, predict_rub_salary_hh(vacancies_hh), vacancies_hh)
-            table_sj.extend(get_table(statistics_sj))
-            table_hh.extend(get_table(statistics_hh))
-        except requests.HTTPError:
-            print('Не возможно найти страницу', file=sys.stderr)
-        except requests.exceptions.ConnectionError:
-            print('Нет связи с сервером', file=sys.stderr)
-    print(AsciiTable(table_sj, title_sj).table)
-    print(AsciiTable(table_hh, title_hh).table)
+    #for lang in languages:
+    #    try:
+            #vacancies_sj = get_superjob_vacancies(lang, api_id)
+            #statistics_sj = get_sj_statistics(lang, predict_rub_salary_for_superJob(vacancies_sj), vacancies_sj)
+            #vacancies_hh = get_vacancies_hh(lang)
+            #statistics_hh = get_hh_statistics(lang, predict_rub_salary_hh(vacancies_hh), vacancies_hh)
+            #table_sj.extend(get_table(statistics_sj))
+            #table_hh.extend(get_table(statistics_hh))
+        #except requests.HTTPError:
+        #    print('Не возможно найти страницу', file=sys.stderr)
+        #except requests.exceptions.ConnectionError:
+        #    print('Нет связи с сервером', file=sys.stderr)
+    #print(AsciiTable(table_sj, title_sj).table)
+    #print(AsciiTable(table_hh, title_hh).table)
+    print(predict_rub_salary_hh(get_vacancies_hh('Python')))
         
         
 
