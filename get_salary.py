@@ -4,7 +4,7 @@ import sys
 import time
 from terminaltables import AsciiTable
 from dotenv import load_dotenv
-
+import get_statistics
 
 def get_vacancies_hh(lang):
     moscow_area_number = 1
@@ -51,20 +51,6 @@ def predict_rub_salary_hh(vacancies):
     return avg_salary
 
 
-def get_hh_statistics(lang, wages, found_vacancies):
-    jobs_counted = len(wages)
-    summ = sum(wages)       
-    if not jobs_counted:
-        avg_salary = 0
-    else:
-        avg_salary = summ/jobs_counted
-    statistics = [lang,
-                  found_vacancies,
-                  jobs_counted,
-                  avg_salary]
-    return statistics
-
-
 def get_superjob_vacancies(lang, api_id):
     moscow_area_number = 4
     page = 0
@@ -100,20 +86,6 @@ def predict_rub_salary_for_superJob(vacancies):
     return salaries
 
 
-def get_sj_statistics(lang, wages, total_vacancies):
-    jobs_counted = len(wages)
-    summ = sum(wages)       
-    if not jobs_counted:
-        avg_salary = 0
-    else:
-        avg_salary = summ/jobs_counted
-    statistics = [lang,
-                  total_vacancies,
-                  jobs_counted,
-                  avg_salary]
-    return statistics
-
-
 def get_table(statistics):
     table = []
     table.append(statistics)
@@ -123,8 +95,7 @@ def get_table(statistics):
 def main():
     load_dotenv()
     api_id = os.environ['SUPERJOB_SECRET_KEY']
-    #languages = ['Python', 'Java', 'C#', 'C++', 'Ruby']
-    languages = ['Python']
+    languages = ['Python', 'Java', 'C#', 'C++', 'Ruby']
     title_sj = 'SuperJob Moscow'
     title_hh = 'HeadHunter Moscow'
     table_sj = [
@@ -136,9 +107,9 @@ def main():
     for lang in languages:
         try:
             vacancies_sj = get_superjob_vacancies(lang, api_id)
-            statistics_sj = get_sj_statistics(lang, predict_rub_salary_for_superJob(vacancies_sj), vacancies_sj[0]['total'])
+            statistics_sj = get_statistics.statistics(lang, predict_rub_salary_for_superJob(vacancies_sj), vacancies_sj[0]['total'])
             vacancies_hh = get_vacancies_hh(lang)
-            statistics_hh = get_hh_statistics(lang, predict_rub_salary_hh(vacancies_hh), vacancies_hh[0]['found'])
+            statistics_hh = get_statistics.statistics(lang, predict_rub_salary_hh(vacancies_hh), vacancies_hh[0]['found'])
             table_sj.extend(get_table(statistics_sj))
             table_hh.extend(get_table(statistics_hh))
         except requests.HTTPError:
