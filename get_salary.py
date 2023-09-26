@@ -53,8 +53,7 @@ def predict_rub_salary_hh(vacancies):
 
 def get_hh_statistics(lang, wages, found_vacancies):
     jobs_counted = len(wages)
-    if wages:
-        summ = sum(wages)       
+    summ = sum(wages)       
     if not jobs_counted:
         avg_salary = 0
     else:
@@ -103,8 +102,7 @@ def predict_rub_salary_for_superJob(vacancies):
 
 def get_sj_statistics(lang, wages, total_vacancies):
     jobs_counted = len(wages)
-    if wages:
-        summ = sum(wages)       
+    summ = sum(wages)       
     if not jobs_counted:
         avg_salary = 0
     else:
