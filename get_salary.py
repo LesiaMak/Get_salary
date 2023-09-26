@@ -114,49 +114,38 @@ def get_sj_statistics(lang, wages, vacancies):
     return statistics
 
 
-def get_table_sj(languages, api_id):
-    table_sj = [
-        ['Язык программирования ', 'Вакансий найдено ', 'Вакансий обработано', 'Cредняя зарплата'],
-    ]
-    for lang in languages:
-        vacancies = get_superjob_vacancies(lang, api_id)
-        table_sj.append(get_sj_statistics(lang, predict_rub_salary_for_superJob(vacancies), vacancies))
-    return table_sj
-
-
-def print_table_sj(languages, api_id):
-    title_sj = 'SuperJob Moscow'
-    table_sj = AsciiTable(get_table_sj(languages, api_id), title_sj)
-    return print(table_sj.table)
-
-
-def get_table_hh(languages):
-    table_hh = [
-        ['Язык программирования ', 'Вакансий найдено ', 'Вакансий обработано', 'Cредняя зарплата'],
-    ]
-    for lang in languages:
-        vacancies = get_vacancies_hh(lang)
-        table_hh.append(get_hh_statistics(lang, predict_rub_salary_hh(vacancies), vacancies))
-    return table_hh
-
-
-def print_table_hh(languages):    
-    title_hh = 'HeadHunter Moscow'
-    table_hh = AsciiTable(get_table_hh(languages), title_hh)
-    return print(table_hh.table)
+def get_table(statistics):
+    table = []
+    table.append(statistics)
+    return table
 
 
 def main():
     load_dotenv()
     api_id = os.environ['SUPERJOB_SECRET_KEY']
     languages = ['Python', 'Java', 'C#', 'C++', 'Ruby']
-    try:
-        print_table_sj(languages, api_id)
-        print_table_hh(languages)
-    except requests.HTTPError:
-        print('Не возможно найти страницу', file=sys.stderr)
-    except requests.exceptions.ConnectionError:
-        print('Нет связи с сервером', file=sys.stderr)
+    title_sj = 'SuperJob Moscow'
+    title_hh = 'HeadHunter Moscow'
+    table_sj = [
+        ['Язык программирования ', 'Вакансий найдено ', 'Вакансий обработано', 'Cредняя зарплата'],
+    ]
+    table_hh = [
+        ['Язык программирования ', 'Вакансий найдено ', 'Вакансий обработано', 'Cредняя зарплата'],
+    ]
+    for lang in languages:
+        try:
+            vacancies_sj = get_superjob_vacancies(lang, api_id)
+            statistics_sj = get_sj_statistics(lang, predict_rub_salary_for_superJob(vacancies_sj), vacancies_sj)
+            vacancies_hh = get_vacancies_hh(lang)
+            statistics_hh = get_hh_statistics(lang, predict_rub_salary_hh(vacancies_hh), vacancies_hh)
+            table_sj.extend(get_table(statistics_sj))
+            table_hh.extend(get_table(statistics_hh))
+        except requests.HTTPError:
+            print('Не возможно найти страницу', file=sys.stderr)
+        except requests.exceptions.ConnectionError:
+            print('Нет связи с сервером', file=sys.stderr)
+    print(AsciiTable(table_sj, title_sj).table)
+    print(AsciiTable(table_hh, title_hh).table)
         
         
 
