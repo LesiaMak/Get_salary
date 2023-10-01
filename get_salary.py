@@ -119,15 +119,15 @@ def main():
     for lang in languages:
         try:
             vacancies_sj = get_superjob_vacancies(lang, api_id)
-            statistics_sj = get_statistics(lang, predict_rub_salary_for_superJob(vacancies_sj), vacancies_sj[0]['total'])
             vacancies_hh = get_vacancies_hh(lang)
-            statistics_hh = get_statistics(lang, predict_rub_salary_hh(vacancies_hh), vacancies_hh[0]['found'])
-            table_sj.extend(statistics_sj)
-            table_hh.extend(statistics_hh)
         except requests.HTTPError:
             print('Не возможно найти страницу', file=sys.stderr)
         except requests.exceptions.ConnectionError:
             print('Нет связи с сервером', file=sys.stderr)
+        statistics_sj = get_statistics(lang, predict_rub_salary_for_superJob(vacancies_sj), vacancies_sj[0]['total'])
+        statistics_hh = get_statistics(lang, predict_rub_salary_hh(vacancies_hh), vacancies_hh[0]['found'])
+        table_sj.extend(statistics_sj)
+        table_hh.extend(statistics_hh)
     print(AsciiTable(table_sj, title_sj).table)
     print(AsciiTable(table_hh, title_hh).table)
 
