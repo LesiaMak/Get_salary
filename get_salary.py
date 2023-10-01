@@ -107,9 +107,9 @@ def main():
     for lang in languages:
         try:
             vacancies_sj = get_superjob_vacancies(lang, api_id)
-            statistics_sj = get_statistics.statistics(lang, predict_rub_salary_for_superJob(vacancies_sj), vacancies_sj[0]['total'])
+            statistics_sj = get_statistics.get_statistics(lang, predict_rub_salary_for_superJob(vacancies_sj), vacancies_sj[0]['total'])
             vacancies_hh = get_vacancies_hh(lang)
-            statistics_hh = get_statistics.statistics(lang, predict_rub_salary_hh(vacancies_hh), vacancies_hh[0]['found'])
+            statistics_hh = get_statistics.get_statistics(lang, predict_rub_salary_hh(vacancies_hh), vacancies_hh[0]['found'])
             table_sj.extend(get_table(statistics_sj))
             table_hh.extend(get_table(statistics_hh))
         except requests.HTTPError:

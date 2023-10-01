@@ -1,6 +1,6 @@
 
 
-def statistics(lang, wages, total_vacancies):
+def get_statistics(lang, wages, total_vacancies):
     jobs_counted = len(wages)
     summ = sum(wages)       
     if not jobs_counted:
