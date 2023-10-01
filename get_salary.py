@@ -28,18 +28,22 @@ def get_vacancies_hh(lang):
 
 def count_avg_salary(wage_from, wage_to, currency):
     if currency == 'RUR' or currency == 'rub':
-        if not wage_from and not wage_to:
+        if not wage_from and not wage_to: 
             avg_salary = 0
-        elif not wage_from:
+            return avg_salary
+        if not wage_from:
             avg_salary = wage_to * 0.8
-        elif not wage_to:
+            return avg_salary
+        if not wage_to:
             avg_salary = wage_from * 1.2
-        elif wage_from and wage_to:
+            return avg_salary
+        if wage_from and wage_to:
             avg_salary = (wage_from + wage_to)/ 2
-    else:
-        avg_salary = 0
-    
+            return avg_salary
+    avg_salary = 0
     return avg_salary
+
+
     
 
 def predict_rub_salary_hh(vacancies):
